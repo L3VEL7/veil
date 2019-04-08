@@ -402,7 +402,11 @@ RecentRequestsTableModel *WalletModel::getRecentRequestsTableModel()
 
 WalletModel::EncryptionStatus WalletModel::getEncryptionStatus() const
 {
-    if(!m_wallet->isCrypted())
+    if (m_wallet->isUnlockedForStakingOnly())
+    {
+        return UnlockedForStakingOnly;
+    }
+    else if(!m_wallet->isCrypted())
     {
         return Unencrypted;
     }
@@ -412,8 +416,6 @@ WalletModel::EncryptionStatus WalletModel::getEncryptionStatus() const
     }
     else
     {
-        if (m_wallet->isUnlockedForStakingOnly())
-            return UnlockedForStakingOnly;
         return Unlocked;
     }
 }
