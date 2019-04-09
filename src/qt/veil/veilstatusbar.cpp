@@ -13,9 +13,6 @@ VeilStatusBar::VeilStatusBar(QWidget *parent, BitcoinGUI* gui) :
 {
     ui->setupUi(this);
 
-    ui->checkStaking->setProperty("cssClass" , "switch");
-    ui->checkPrecompute->setProperty("cssClass" , "switch");
-
     connect(ui->btnLock, SIGNAL(clicked()), this, SLOT(onBtnLockClicked()));
     connect(ui->btnSync, SIGNAL(clicked()), this, SLOT(onBtnSyncClicked()));
 }
@@ -166,6 +163,13 @@ void VeilStatusBar::updateLockCheckbox(){
         if (ui->btnLock->isChecked() != lockStatus) {
             ui->btnLock->setChecked(lockStatus);
             ui->btnLock->setIcon(QIcon( (lockStatus) ? ":/icons/ic-locked-png" : ":/icons/ic-unlocked-png"));
+
+            QString strToolTip = tr("Wallet is locked for all transaction types.");
+            if (lockState == WalletModel::UnlockedForStakingOnly)
+                strToolTip = tr("Wallet is unlocked for staking transactions only.");
+            ui->btnLock->setStatusTip(strToolTip);
+            ui->btnLock->setToolTip(strToolTip);
+
             fBlockNextBtnLockSignal = true;
         }
     }
